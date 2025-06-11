@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SistemaSolicitudesLaDat.Entities\SistemaSolicitudesLaDat.Entities.csproj" />
+    <ProjectReference Include="..\SistemaSolicitudesLaDat.Repository\SistemaSolicitudesLaDat.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

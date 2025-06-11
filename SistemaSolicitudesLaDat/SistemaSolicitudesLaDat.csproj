@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Principal\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Shared\_PrincipalLayout.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SistemaSolicitudesLaDat.Entities\SistemaSolicitudesLaDat.Entities.csproj" />
+    <ProjectReference Include="..\SistemaSolicitudesLaDat.Repository\SistemaSolicitudesLaDat.Repository.csproj" />
+    <ProjectReference Include="..\SistemaSolicitudesLaDat.Service\SistemaSolicitudesLaDat.Service.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,42 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Usuarios.AgregarUsuarioModel
+@{
+    ViewData["Title"] = "Agregar Usuario";
+    Layout = "_PrincipalLayout";
+}
+
+<h2>Agregar Nuevo Usuario</h2>
+
+@if (!string.IsNullOrEmpty(Model.Mensaje))
+{
+    <div class="alert alert-info">@Model.Mensaje</div>
+}
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Usuario.NombreUsuario">Usuario</label>
+        <input class="form-control" asp-for="Usuario.NombreUsuario" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Usuario.NombreCompleto">Nombre Completo</label>
+        <input class="form-control" asp-for="Usuario.NombreCompleto" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Usuario.CorreoElectronico">Correo</label>
+        <input class="form-control" asp-for="Usuario.CorreoElectronico" type="email" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Contrasenia">Contraseña</label>
+        <input class="form-control" asp-for="Contrasenia" type="password" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Usuario.Estado">Estado</label>
+        <select class="form-select" asp-for="Usuario.Estado">
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+            <option value="Bloqueado">Bloqueado</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Guardar Usuario</button>
+    <a asp-page="/Usuarios/RegistroUsuarios" class="btn btn-secondary">Cancelar</a>
+</form>
