@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SistemaSolicitudesLaDat.Entities.Usuarios;
 using SistemaSolicitudesLaDat.Repository.Infrastructure;
+using System.Data;
 
 namespace SistemaSolicitudesLaDat.Repository.Usuarios
 {
@@ -33,8 +34,20 @@ namespace SistemaSolicitudesLaDat.Repository.Usuarios
         {
             using (var connection = _dbConnectionFactory.CreateConnection())
             {
-                var sql = "INSERT INTO Persona (PersonaID, Nombre, Tipo, Gender, Password) VALUES (@PersonaID, @Nombre, @Tipo, @Gender, @Password)";
-                return await connection.ExecuteAsync(sql, usuario);
+                var parametros = new DynamicParameters();
+
+                parametros.Add("pI_nombre_usuario", usuario.NombreUsuario);
+                parametros.Add("pI_nombre_completo", usuario.NombreCompleto);
+                parametros.Add("pI_correo_electronico", usuario.CorreoElectronico);
+                parametros.Add("pI_contrasenia_cifrada", usuario.ContraseniaCifrada, DbType.Binary);
+                parametros.Add("pI_tag", usuario.TagAutenticacion, DbType.Binary);
+                parametros.Add("pI_nonce", usuario.Nonce, DbType.Binary);
+                parametros.Add("pI_estado", usuario.Estado.ToString());
+                parametros.Add("pS_resultado", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                await connection.ExecuteAsync("ingreso_nuevo_usuario", parametros, commandType: CommandType.StoredProcedure);
+
+                return parametros.Get<int>("pS_resultado"); // 1 si éxito, 0 si error
             }
         }
 

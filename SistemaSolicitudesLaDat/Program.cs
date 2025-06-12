@@ -19,6 +19,7 @@ builder.Services.AddScoped<LoginRepository>();
 
 // Servicios
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IEncriptadoService, EncriptadoService>();
 builder.Services.AddScoped<ISeguridadService, SeguridadService>();
 builder.Services.AddScoped<LoginService>();
 builder.Services.AddScoped<EncriptadoService>();

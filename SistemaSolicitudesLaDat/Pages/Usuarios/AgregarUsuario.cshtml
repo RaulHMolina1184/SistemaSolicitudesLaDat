@@ -5,38 +5,117 @@
     Layout = "_PrincipalLayout";
 }
 
-<h2>Agregar Nuevo Usuario</h2>
-
 @if (!string.IsNullOrEmpty(Model.Mensaje))
 {
     <div class="alert alert-info">@Model.Mensaje</div>
 }
 
-<form method="post">
-    <div class="mb-3">
-        <label asp-for="Usuario.NombreUsuario">Usuario</label>
-        <input class="form-control" asp-for="Usuario.NombreUsuario" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Usuario.NombreCompleto">Nombre Completo</label>
-        <input class="form-control" asp-for="Usuario.NombreCompleto" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Usuario.CorreoElectronico">Correo</label>
-        <input class="form-control" asp-for="Usuario.CorreoElectronico" type="email" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Contrasenia">Contraseña</label>
-        <input class="form-control" asp-for="Contrasenia" type="password" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Usuario.Estado">Estado</label>
-        <select class="form-select" asp-for="Usuario.Estado">
-            <option value="Activo">Activo</option>
-            <option value="Inactivo">Inactivo</option>
-            <option value="Bloqueado">Bloqueado</option>
-        </select>
-    </div>
-    <button type="submit" class="btn btn-success">Guardar Usuario</button>
-    <a asp-page="/Usuarios/RegistroUsuarios" class="btn btn-secondary">Cancelar</a>
-</form>
+<div class="container mt-5">
+    <div class="card shadow-sm border-0" style="background-color: #f8f9fa;">
+        <div class="card-body">
+            <h4 class="card-title mb-4">Agregar Nuevo Usuario</h4>
+
+            <form method="post">
+                <div class="mb-3">
+                    <label asp-for="UsuarioForm.NombreUsuario" class="form-label"></label>
+                    <input asp-for="UsuarioForm.NombreUsuario" class="form-control" />
+                    <span asp-validation-for="UsuarioForm.NombreUsuario" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="UsuarioForm.NombreCompleto" class="form-label"></label>
+                    <input asp-for="UsuarioForm.NombreCompleto" class="form-control" />
+                    <span asp-validation-for="UsuarioForm.NombreCompleto" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="UsuarioForm.Correo" class="form-label"></label>
+                    <input asp-for="UsuarioForm.Correo" class="form-control" />
+                    <span asp-validation-for="UsuarioForm.Correo" class="text-danger"></span>
+                </div>
+
+                <!-- Para de contraseña con icono -->
+                <div class="mb-3 position-relative">
+                    <label asp-for="UsuarioForm.Contrasenia" class="form-label"></label>
+                    <div class="input-group">
+                        <input asp-for="UsuarioForm.Contrasenia" type="password" class="form-control" id="password" />
+                        <span class="input-group-text" onclick="togglePassword('password', 'icon-password')">
+                            <i class="bi bi-eye-slash" id="icon-password"></i>
+                        </span>
+                    </div>
+                    <span asp-validation-for="UsuarioForm.Contrasenia" class="text-danger"></span>
+                </div>
+
+                <!-- Para confirmación de contraseña con icono -->
+                <div class="mb-3 position-relative">
+                    <label asp-for="UsuarioForm.ConfirmarContrasenia" class="form-label"></label>
+                    <div class="input-group">
+                        <input asp-for="UsuarioForm.ConfirmarContrasenia" type="password" class="form-control" id="confirmarContrasenia" />
+                        <span class="input-group-text" onclick="togglePassword('confirmarContrasenia', 'icon-confirmarContrasenia')">
+                            <i class="bi bi-eye-slash" id="icon-confirmarContrasenia"></i>
+                        </span>
+                    </div>
+                    <span asp-validation-for="UsuarioForm.ConfirmarContrasenia" class="text-danger"></span>
+                    <span class="text-danger" id="errorConfirmacion"></span>
+                </div>
+
+                <!-- Para estado de usuario -->
+                <div class="mb-3">
+                    <label asp-for="UsuarioForm.Estado" class="form-label"></label>
+                    <select asp-for="UsuarioForm.Estado" class="form-select">
+                        <option value="">-- Seleccione estado --</option>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                        <option value="bloqueado">Bloqueado</option>
+                    </select>
+                    <span asp-validation-for="UsuarioForm.Estado" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" onclick="return validarContrasenia()">Guardar</button>
+                <a asp-page="/Usuarios/RegistroUsuarios" class="btn btn-secondary">Cancelar</a>
+            </form>
+
+            <!-- Script para mostrar/ocultar contraseña y validar en tiempo real -->
+            <script>
+                function togglePassword(id) {
+                    const input = document.getElementById(id);
+                    const icon = document.getElementById(`icon-${id}`);
+
+                    if (input.type === "password") {
+                        input.type = "text";
+                        icon.classList.remove("bi-eye-slash");
+                        icon.classList.add("bi-eye");
+                    } else {
+                        input.type = "password";
+                        icon.classList.remove("bi-eye");
+                        icon.classList.add("bi-eye-slash");
+                    }
+                }
+
+                document.getElementById('confirmarContrasenia').addEventListener('input', function () {
+                    const pass = document.getElementById('password').value;
+                    const confirmPass = this.value;
+                    const errorSpan = document.getElementById('errorConfirmacion');
+
+                    if (pass !== confirmPass) {
+                        errorSpan.textContent = "Las contraseñas no coinciden.";
+                    } else {
+                        errorSpan.textContent = "";
+                    }
+                });
+
+                function validarContrasenia() {
+                    const pass = document.getElementById('password').value;
+                    const confirmPass = document.getElementById('confirmarContrasenia').value;
+                    const errorSpan = document.getElementById('errorConfirmacion');
+
+                    if (pass !== confirmPass) {
+                        errorSpan.textContent = "Las contraseñas no coinciden.";
+                        return false; // Previene el envío del formulario
+                    }
+
+                    errorSpan.textContent = "";
+                    return true; // Permite el envío del formulario
+                }
+            </script>
+

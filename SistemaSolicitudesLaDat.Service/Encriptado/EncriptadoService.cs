@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SistemaSolicitudesLaDat.Service.Encriptado
 {
-    public class EncriptadoService
+    public class EncriptadoService : IEncriptadoService
     {
         private readonly ISeguridadService _seguridadService;
         private readonly byte[] _key;
