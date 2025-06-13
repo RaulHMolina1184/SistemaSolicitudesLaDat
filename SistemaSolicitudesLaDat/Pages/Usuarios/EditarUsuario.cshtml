@@ -5,34 +5,42 @@
     Layout = "_PrincipalLayout";
 }
 
-<h2 class="mt-4">Editar Usuario</h2>
+<h1 class="mt-4">Editar Usuario</h1>
 
-<form method="post">
-    <div class="mb-3">
-        <label asp-for="Usuario.Nombre_Usuario" class="form-label">Nombre de Usuario</label>
-        <input asp-for="Usuario.Nombre_Usuario" class="form-control" />
-        <span asp-validation-for="Usuario.Nombre_Usuario" class="text-danger"></span>
+<div class="container mt-5 d-flex">
+    <div class="card shadow-sm border-0 w-50" style="background-color: #d9d9d9;">
+        <div class="card-body">
+
+            <form method="post">
+                <div class="mb-3">
+                    <label asp-for="Usuario.Nombre_Usuario" class="form-label"><strong>Nombre de Usuario</strong></label>
+                    <input asp-for="Usuario.Nombre_Usuario" class="form-control" />
+                    <span asp-validation-for="Usuario.Nombre_Usuario" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Usuario.Nombre_Completo" class="form-label"><strong>Nombre Completo</strong></label>
+                    <input asp-for="Usuario.Nombre_Completo" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Usuario.Correo_Electronico" class="form-label"><strong>Correo Electrónico</strong></label>
+                    <input asp-for="Usuario.Correo_Electronico" type="email" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Usuario.Estado" class="form-label"><strong>Estado</strong></label>
+                    <select asp-for="Usuario.Estado" class="form-select">
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                        <option value="Bloqueado">Bloqueado</option>
+                    </select>
+                </div>
+                <input type="hidden" asp-for="Usuario.Id_Usuario" />
+                <button type="submit" class="btn btn-dark">Guardar Cambios</button>
+                <a asp-page="/Usuarios/ListarUsuarios" class="btn btn-outline-secondary">Regresar</a>
+            </form>
+
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="Usuario.Nombre_Completo" class="form-label">Nombre Completo</label>
-        <input asp-for="Usuario.Nombre_Completo" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Usuario.Correo_Electronico" class="form-label">Correo Electrónico</label>
-        <input asp-for="Usuario.Correo_Electronico" type="email" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Usuario.Estado" class="form-label">Estado</label>
-        <select asp-for="Usuario.Estado" class="form-select">
-            <option value="Activo">Activo</option>
-            <option value="Inactivo">Inactivo</option>
-            <option value="Bloqueado">Bloqueado</option>
-        </select>
-    </div>
-    <input type="hidden" asp-for="Usuario.Id_Usuario" />
-    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-    <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

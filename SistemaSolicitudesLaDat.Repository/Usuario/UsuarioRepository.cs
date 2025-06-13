@@ -80,13 +80,16 @@ namespace SistemaSolicitudesLaDat.Repository.Usuarios
             }
         }
 
-        public async Task<int> DeleteAsync(string id)
+        public async Task<int> DeleteAsync(string id_usuario)
         {
-            using (var connection = _dbConnectionFactory.CreateConnection())
-            {
-                var sql = "DELETE FROM Persona WHERE PersonaID = @Id";
-                return await connection.ExecuteAsync(sql, new { Id = id });
-            }
+            using var connection = _dbConnectionFactory.CreateConnection();
+
+            var parameters = new DynamicParameters();
+            parameters.Add("pI_id_usuario", id_usuario);
+            parameters.Add("pS_resultado", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            await connection.ExecuteAsync("eliminar_usuario_por_id", parameters, commandType: CommandType.StoredProcedure);
+            return parameters.Get<int>("pS_resultado");
         }
     }
 }

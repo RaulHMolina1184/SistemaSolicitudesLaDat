@@ -26,19 +26,19 @@
                        placeholder="Ingrese su contraseña" required />
                 <span asp-validation-for="Contrasenia" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Aceptar</button>
+            <button type="submit" class="btn btn-secondary w-100">Aceptar</button>
         </form>
 
         @if (!string.IsNullOrEmpty(Model.Mensaje))
         {
-            <div class="alert alert-info mt-3" role="alert">
+            <div class="alert alert-dark mt-3" role="alert">
                 @Model.Mensaje
             </div>
         }
 
         @if (!string.IsNullOrEmpty(Model.MensajeInfo))
         {
-            <div class="alert alert-info mt-3" role="alert">
+            <div class="alert alert-dark mt-3" role="alert">
                 @Model.MensajeInfo
             </div>
         }

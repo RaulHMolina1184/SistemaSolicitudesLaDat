@@ -34,9 +34,9 @@ namespace SistemaSolicitudesLaDat.Service.Usuarios
             return _usuarioRepository.UpdateAsync(usuario);
         }
 
-        public Task<int> DeleteAsync(string id)
+        public Task<int> DeleteAsync(string id_usuario)
         {
-            return _usuarioRepository.DeleteAsync(id);
+            return _usuarioRepository.DeleteAsync(id_usuario);
         }
     }
 

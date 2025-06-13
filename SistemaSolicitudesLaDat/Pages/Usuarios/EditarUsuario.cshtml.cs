@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using SistemaSolicitudesLaDat.Entities.Usuarios;
 using SistemaSolicitudesLaDat.Pages.Models;
 using SistemaSolicitudesLaDat.Service.Abstract;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SistemaSolicitudesLaDat.Pages.Usuarios
 {
+    [Authorize]
     public class EditarUsuarioModel : PageModel
     {
         private readonly IUsuarioService _usuarioService;

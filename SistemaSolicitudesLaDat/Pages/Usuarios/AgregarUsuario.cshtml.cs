@@ -4,9 +4,11 @@ using SistemaSolicitudesLaDat.Entities.Usuarios;
 using SistemaSolicitudesLaDat.Models; 
 using SistemaSolicitudesLaDat.Service.Abstract;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SistemaSolicitudesLaDat.Pages.Usuarios
 {
+    [Authorize]
     public class AgregarUsuarioModel : PageModel
     {
         private readonly IUsuarioService _usuarioService;
@@ -45,7 +47,7 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
             if (resultado == 1)
             {
                 TempData["Mensaje"] = "Usuario agregado exitosamente.";
-                return RedirectToPage("/Usuarios/AgregarUsuario");
+                return RedirectToPage("/Usuarios/ListarUsuarios");
             }
             else
             {

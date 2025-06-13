@@ -1,4 +1,4 @@
-using SistemaSolicitudesLaDat.Repository.Infrastructure;
+锘縰sing SistemaSolicitudesLaDat.Repository.Infrastructure;
 using SistemaSolicitudesLaDat.Repository.Login;
 using SistemaSolicitudesLaDat.Repository.Usuarios;
 using SistemaSolicitudesLaDat.Service.Abstract;
@@ -27,10 +27,22 @@ builder.Services.AddScoped<EncriptadoService>();
 builder.Services.AddAuthentication("Cookies")
     .AddCookie("Cookies", options =>
     {
-        options.LoginPath = "/Index"; // P醙ina donde redirige si no hay sesi髇
+        options.LoginPath = "/Index"; // P谩gina donde redirige si no hay sesi贸n
         //options.AccessDeniedPath = "/AccessDenied"; // Opcional
         options.SlidingExpiration = true;
     });
+
+// Para restringir la autenticaci贸n y autorizaci贸n de usuarios
+builder.Services.AddAuthorization();
+
+builder.Services.AddRazorPages(options =>
+{
+    // Para proteger toda la carpeta /Usuarios
+    options.Conventions.AuthorizeFolder("/Usuarios");
+
+    // Para permitir acceso an贸nimo al login
+    options.Conventions.AllowAnonymousToPage("/Login");
+});
 
 var app = builder.Build();
 
@@ -47,7 +59,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // A馻dir autenticaci髇 antes de autorizaci髇
+app.UseAuthentication(); // A帽adir autenticaci贸n antes de autorizaci贸n
 app.UseAuthorization();
 
 app.MapRazorPages();

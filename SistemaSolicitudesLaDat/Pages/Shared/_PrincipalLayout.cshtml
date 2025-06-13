@@ -26,7 +26,6 @@
 
         .topbar {
             height: 60px;
-            background-color: #343a40;
             color: white;
             padding: 0 1rem;
         }
@@ -46,7 +45,10 @@
                 <div class="w-80 mx-auto" style="height: 3px; background-color: #e6e6e6; margin-bottom: 5px"></div>
                 <ul class="nav flex-column">
                     <li class="nav-item"><a class="nav-link text-white" href="/Usuarios/ListarUsuarios">Gestión Usuarios</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/Principal">Principal</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/">Link 1</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/">Link 2</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/">Link 3</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/">Link 4</a></li>
                     <li class="nav-item">
                         <form method="post" asp-page="/CerrarSesion" class="d-inline">
                             <button type="submit" class="btn btn-outline-light mt-2 w-100 text-start">Cerrar sesión</button>
@@ -58,7 +60,7 @@
             <!-- Main content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
                 <!-- Topbar -->
-                <div class="topbar d-flex justify-content-end align-items-center mb-3">
+                <div class="topbar bg-dark d-flex justify-content-end align-items-center mb-3">
                     <span class="me-2">@userName</span>
                     <img src="@avatarUrl" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;" />
                 </div>
