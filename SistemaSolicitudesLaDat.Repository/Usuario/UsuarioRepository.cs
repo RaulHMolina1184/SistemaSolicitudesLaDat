@@ -14,11 +14,15 @@ namespace SistemaSolicitudesLaDat.Repository.Usuarios
             _dbConnectionFactory = dbConnectionFactory;
         }
 
-        public async Task<IEnumerable<Entities.Usuarios.Usuario>> GetAllAsync()
+        public async Task<IEnumerable<Usuario>> GetAllAsync()
         {
             using (var connection = _dbConnectionFactory.CreateConnection())
             {
-                return await connection.QueryAsync<Usuario>("SELECT PersonaID, Nombre, Tipo, Gender, Password FROM Persona");
+                var usuarios = await connection.QueryAsync<Usuario>(
+                    "mostrar_usuarios",
+                    commandType: CommandType.StoredProcedure);
+
+                return usuarios;
             }
         }
 
@@ -26,7 +30,14 @@ namespace SistemaSolicitudesLaDat.Repository.Usuarios
         {
             using (var connection = _dbConnectionFactory.CreateConnection())
             {
-                return await connection.QuerySingleOrDefaultAsync<Usuario>("SELECT PersonaID, Nombre, Tipo, Gender, Password FROM Persona WHERE PersonaID = @Id", new { Id = id });
+                var parameters = new DynamicParameters();
+                parameters.Add("pI_id_usuario", id, System.Data.DbType.String);
+
+                return await connection.QuerySingleOrDefaultAsync<Usuario>(
+                    "mostrar_usuario_por_id",
+                    parameters,
+                    commandType: System.Data.CommandType.StoredProcedure
+                );
             }
         }
 
@@ -36,9 +47,9 @@ namespace SistemaSolicitudesLaDat.Repository.Usuarios
             {
                 var parametros = new DynamicParameters();
 
-                parametros.Add("pI_nombre_usuario", usuario.NombreUsuario);
-                parametros.Add("pI_nombre_completo", usuario.NombreCompleto);
-                parametros.Add("pI_correo_electronico", usuario.CorreoElectronico);
+                parametros.Add("pI_nombre_usuario", usuario.Nombre_Usuario);
+                parametros.Add("pI_nombre_completo", usuario.Nombre_Completo);
+                parametros.Add("pI_correo_electronico", usuario.Correo_Electronico);
                 parametros.Add("pI_contrasenia_cifrada", usuario.ContraseniaCifrada, DbType.Binary);
                 parametros.Add("pI_tag", usuario.TagAutenticacion, DbType.Binary);
                 parametros.Add("pI_nonce", usuario.Nonce, DbType.Binary);
@@ -55,8 +66,17 @@ namespace SistemaSolicitudesLaDat.Repository.Usuarios
         {
             using (var connection = _dbConnectionFactory.CreateConnection())
             {
-                var sql = "UPDATE Persona SET Nombre = @Nombre, Tipo = @Tipo, Gender = @Gender, Password = @Password WHERE PersonaID = @PersonaID";
-                return await connection.ExecuteAsync(sql, usuario);
+                var parameters = new DynamicParameters();
+                parameters.Add("pI_id_usuario", usuario.Id_Usuario, System.Data.DbType.String);
+                parameters.Add("pI_nombre_usuario", usuario.Nombre_Usuario, System.Data.DbType.String);
+                parameters.Add("pI_nombre_completo", usuario.Nombre_Completo, System.Data.DbType.String);
+                parameters.Add("pI_correo_electronico", usuario.Correo_Electronico, System.Data.DbType.String);
+                parameters.Add("pI_estado", usuario.Estado.ToString(), System.Data.DbType.String);
+                parameters.Add("pS_resultado", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
+
+                await connection.ExecuteAsync("actualizar_usuario_por_id", parameters, commandType: System.Data.CommandType.StoredProcedure);
+
+                return parameters.Get<int>("pS_resultado");
             }
         }
 

@@ -1,0 +1,59 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Usuarios.IndexModel
+@{
+    ViewData["Title"] = "Administración de Usuarios";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Administración de Usuarios</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Mensaje"]
+    </div>
+}
+
+<p>
+    <a class="btn btn-primary" asp-page="AgregarUsuario">+ Nuevo Usuario</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Id Usuario</th>
+            <th>Nombre de Usuario</th>
+            <th>Nombre Completo</th>
+            <th>Correo Electrónico</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Usuarios.Count; i++)
+        {
+            <tr>
+                <th scope="row">@(@i + 1)</th>
+                <td>@Model.Usuarios[i].Id_Usuario</td>
+                <td>@Model.Usuarios[i].Nombre_Usuario</td>
+                <td>@Model.Usuarios[i].Nombre_Completo</td>
+                <td>@Model.Usuarios[i].Correo_Electronico</td>
+                <td>@Model.Usuarios[i].Estado</td>
+                <td>
+                    <a class="btn btn-sm btn-warning"
+                       asp-page="EditarUsuario"
+                       asp-route-id="@Model.Usuarios[i].Id_Usuario">Editar</a>
+
+                    <form method="post"
+                          asp-page-handler="Eliminar"
+                          asp-route-id="@Model.Usuarios[i].Id_Usuario"
+                          onsubmit="return confirm('¿Desea eliminar este usuario?');"
+                          style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

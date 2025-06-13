@@ -1,0 +1,39 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Usuarios.EditarUsuarioModel
+@{
+    ViewData["Title"] = "Editar Usuario";
+    Layout = "_PrincipalLayout";
+}
+
+<h2 class="mt-4">Editar Usuario</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Usuario.Nombre_Usuario" class="form-label">Nombre de Usuario</label>
+        <input asp-for="Usuario.Nombre_Usuario" class="form-control" />
+        <span asp-validation-for="Usuario.Nombre_Usuario" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Usuario.Nombre_Completo" class="form-label">Nombre Completo</label>
+        <input asp-for="Usuario.Nombre_Completo" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Usuario.Correo_Electronico" class="form-label">Correo Electrónico</label>
+        <input asp-for="Usuario.Correo_Electronico" type="email" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Usuario.Estado" class="form-label">Estado</label>
+        <select asp-for="Usuario.Estado" class="form-select">
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+            <option value="Bloqueado">Bloqueado</option>
+        </select>
+    </div>
+    <input type="hidden" asp-for="Usuario.Id_Usuario" />
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

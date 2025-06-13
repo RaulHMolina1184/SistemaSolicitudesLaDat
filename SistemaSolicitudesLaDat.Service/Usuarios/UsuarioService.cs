@@ -19,9 +19,9 @@ namespace SistemaSolicitudesLaDat.Service.Usuarios
             return _usuarioRepository.GetAllAsync();
         }
 
-        public Task<Usuario?> GetByIdAsync(string id)
+        public Task<Usuario?> GetByIdAsync(string id_usuario)
         {
-            return _usuarioRepository.GetByIdAsync(id);
+            return _usuarioRepository.GetByIdAsync(id_usuario);
         }
 
         public Task<int> InsertAsync(Usuario usuario)

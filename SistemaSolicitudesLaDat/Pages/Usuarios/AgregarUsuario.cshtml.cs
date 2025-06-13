@@ -31,17 +31,27 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
 
             var nuevoUsuario = new Usuario
             {
-                NombreUsuario = UsuarioForm.NombreUsuario,
-                NombreCompleto = UsuarioForm.NombreCompleto,
-                CorreoElectronico = UsuarioForm.Correo,
+                Nombre_Usuario = UsuarioForm.NombreUsuario,
+                Nombre_Completo = UsuarioForm.NombreCompleto,
+                Correo_Electronico = UsuarioForm.Correo,
                 ContraseniaCifrada = cifrada,
                 TagAutenticacion = tag,
                 Nonce = nonce,
                 Estado = Enum.Parse<EstadoUsuario>(UsuarioForm.Estado, ignoreCase: true)
             };
 
-            await _usuarioService.InsertAsync(nuevoUsuario); // Para insercion de usuario
-            return RedirectToPage("/Usuarios/AgregarUsuario");
+            var resultado = await _usuarioService.InsertAsync(nuevoUsuario);
+
+            if (resultado == 1)
+            {
+                TempData["Mensaje"] = "Usuario agregado exitosamente.";
+                return RedirectToPage("/Usuarios/AgregarUsuario");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Hubo un error al agregar el usuario.");
+                return Page();
+            }
         }
     }
 }

@@ -34,8 +34,8 @@ namespace SistemaSolicitudesLaDat.Pages
                 // Crear los claims
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, usuario.NombreUsuario),
-                    new Claim("NombreCompleto", usuario.NombreCompleto),
+                    new Claim(ClaimTypes.Name, usuario.Nombre_Usuario),
+                    new Claim("NombreCompleto", usuario.Nombre_Completo),
                 };
 
                 var identidad = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

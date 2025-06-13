@@ -5,9 +5,13 @@
     Layout = "_PrincipalLayout";
 }
 
-@if (!string.IsNullOrEmpty(Model.Mensaje))
+<h1 class="mt-4">Agregar Usuario</h1>
+
+@if (TempData["Mensaje"] != null)
 {
-    <div class="alert alert-info">@Model.Mensaje</div>
+    <div class="alert alert-success" role="alert">
+        @TempData["Mensaje"]
+    </div>
 }
 
 <div class="container mt-5">
@@ -74,48 +78,49 @@
                 <button type="submit" class="btn btn-primary" onclick="return validarContrasenia()">Guardar</button>
                 <a asp-page="/Usuarios/RegistroUsuarios" class="btn btn-secondary">Cancelar</a>
             </form>
-
+        </div>
+    </div>
+</div>
             <!-- Script para mostrar/ocultar contraseña y validar en tiempo real -->
-            <script>
-                function togglePassword(id) {
-                    const input = document.getElementById(id);
-                    const icon = document.getElementById(`icon-${id}`);
+        <script>
+            function togglePassword(id) {
+                const input = document.getElementById(id);
+                const icon = document.getElementById(`icon-${id}`);
 
-                    if (input.type === "password") {
-                        input.type = "text";
-                        icon.classList.remove("bi-eye-slash");
-                        icon.classList.add("bi-eye");
-                    } else {
-                        input.type = "password";
-                        icon.classList.remove("bi-eye");
-                        icon.classList.add("bi-eye-slash");
-                    }
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove("bi-eye-slash");
+                    icon.classList.add("bi-eye");
+                } else {
+                    input.type = "password";
+                    icon.classList.remove("bi-eye");
+                    icon.classList.add("bi-eye-slash");
                 }
+            }
 
-                document.getElementById('confirmarContrasenia').addEventListener('input', function () {
-                    const pass = document.getElementById('password').value;
-                    const confirmPass = this.value;
-                    const errorSpan = document.getElementById('errorConfirmacion');
+            document.getElementById('confirmarContrasenia').addEventListener('input', function () {
+                const pass = document.getElementById('password').value;
+                const confirmPass = this.value;
+                const errorSpan = document.getElementById('errorConfirmacion');
 
-                    if (pass !== confirmPass) {
-                        errorSpan.textContent = "Las contraseñas no coinciden.";
-                    } else {
-                        errorSpan.textContent = "";
-                    }
-                });
-
-                function validarContrasenia() {
-                    const pass = document.getElementById('password').value;
-                    const confirmPass = document.getElementById('confirmarContrasenia').value;
-                    const errorSpan = document.getElementById('errorConfirmacion');
-
-                    if (pass !== confirmPass) {
-                        errorSpan.textContent = "Las contraseñas no coinciden.";
-                        return false; // Previene el envío del formulario
-                    }
-
+                if (pass !== confirmPass) {
+                    errorSpan.textContent = "Las contraseñas no coinciden.";
+                } else {
                     errorSpan.textContent = "";
-                    return true; // Permite el envío del formulario
                 }
-            </script>
+            });
 
+            function validarContrasenia() {
+                const pass = document.getElementById('password').value;
+                const confirmPass = document.getElementById('confirmarContrasenia').value;
+                const errorSpan = document.getElementById('errorConfirmacion');
+
+                if (pass !== confirmPass) {
+                    errorSpan.textContent = "Las contraseñas no coinciden.";
+                    return false; // Previene el envío del formulario
+                }
+
+                errorSpan.textContent = "";
+                return true; // Permite el envío del formulario
+            }
+        </script>

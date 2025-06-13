@@ -2,10 +2,10 @@
 {
     public class Usuario
     {
-        public string UsuarioID { get; set; } // id_usuario
-        public string NombreUsuario { get; set; }
-        public string NombreCompleto { get; set; }
-        public string CorreoElectronico { get; set; }
+        public string Id_Usuario { get; set; } // id_usuario
+        public string Nombre_Usuario { get; set; }
+        public string Nombre_Completo { get; set; }
+        public string Correo_Electronico { get; set; }
 
         // Almacenar los datos cifrados correctamente
         public byte[] ContraseniaCifrada { get; set; } // Texto cifrado

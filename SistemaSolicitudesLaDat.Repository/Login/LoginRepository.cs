@@ -43,10 +43,10 @@ namespace SistemaSolicitudesLaDat.Repository.Login
                 // Verificar si se encontró el usuario y asgnar los valores de salida a entities
                 return new Usuario
                 {
-                    UsuarioID = parameters.Get<string>("@pS_id_usuario"),
-                    NombreUsuario = parameters.Get<string>("@pS_nombre_usuario"),
-                    NombreCompleto = parameters.Get<string>("@pS_nombre_completo"),
-                    CorreoElectronico = parameters.Get<string>("@pS_correo_electronico"),
+                    Id_Usuario = parameters.Get<string>("@pS_id_usuario"),
+                    Nombre_Usuario = parameters.Get<string>("@pS_nombre_usuario"),
+                    Nombre_Completo = parameters.Get<string>("@pS_nombre_completo"),
+                    Correo_Electronico = parameters.Get<string>("@pS_correo_electronico"),
                     ContraseniaCifrada = parameters.Get<byte[]>("@pS_contrasenia_cifrada"),
                     TagAutenticacion = parameters.Get<byte[]>("@pS_tag"),
                     Nonce = parameters.Get<byte[]>("@pS_nonce"),

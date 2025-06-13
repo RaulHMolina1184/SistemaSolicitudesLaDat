@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Principal\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Pages\Shared\_PrincipalLayout.cshtml.cs" />
   </ItemGroup>
 
