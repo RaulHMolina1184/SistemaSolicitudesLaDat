@@ -7,19 +7,21 @@ namespace SistemaSolicitudesLaDat.Repository.Login
 {
     public class LoginRepository
     {
-        private readonly IDbConnectionFactory _dbConnectionFactory; // Fábrica para crear conexiones a la base de datos
+        private readonly IDbConnectionFactory _dbConnectionFactory;
+
         public LoginRepository(IDbConnectionFactory dbConnectionFactory)
         {
             _dbConnectionFactory = dbConnectionFactory;
         }
 
-        public Usuario VerificarUsuario(string nombreUsuario) // Método para verificar las credenciales del usuario (entities)
+        public Usuario? VerificarUsuario(string nombreUsuario)
         {
-            if (string.IsNullOrWhiteSpace(nombreUsuario))
-                throw new ArgumentException("Nombre de usuario inválido", nameof(nombreUsuario));
-
-            using (var connection = _dbConnectionFactory.CreateConnection())
+            try
             {
+                if (string.IsNullOrWhiteSpace(nombreUsuario))
+                    throw new ArgumentException("Nombre de usuario inválido", nameof(nombreUsuario));
+
+                using var connection = _dbConnectionFactory.CreateConnection();
                 connection.Open();
 
                 var parameters = new DynamicParameters();
@@ -40,7 +42,11 @@ namespace SistemaSolicitudesLaDat.Repository.Login
                 // Ejecutar el procedimiento almacenado
                 connection.Execute("verificar_credencial", parameters, commandType: CommandType.StoredProcedure);
 
-                // Verificar si se encontró el usuario y asgnar los valores de salida a entities
+                // Verificar si se encontró el usuario
+                int encontrado = parameters.Get<int>("@pS_encontrado");
+                if (encontrado == 0)
+                    return null; // Retorna `null` si el usuario no existe
+
                 return new Usuario
                 {
                     Id_Usuario = parameters.Get<string>("@pS_id_usuario"),
@@ -50,18 +56,24 @@ namespace SistemaSolicitudesLaDat.Repository.Login
                     ContraseniaCifrada = parameters.Get<byte[]>("@pS_contrasenia_cifrada"),
                     TagAutenticacion = parameters.Get<byte[]>("@pS_tag"),
                     Nonce = parameters.Get<byte[]>("@pS_nonce"),
-                    Encontrado = parameters.Get<int>("@pS_encontrado")
+                    Encontrado = encontrado
                 };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en VerificarUsuario: {ex.Message}");
+                return null; // Retorna `null` en caso de error
             }
         }
 
         public void RegistrarIntentoFallido(string nombreUsuario)
         {
-            if (string.IsNullOrWhiteSpace(nombreUsuario))
-                throw new ArgumentException("Nombre de usuario inválido", nameof(nombreUsuario));
-
-            using (var connection = _dbConnectionFactory.CreateConnection())
+            try
             {
+                if (string.IsNullOrWhiteSpace(nombreUsuario))
+                    throw new ArgumentException("Nombre de usuario inválido", nameof(nombreUsuario));
+
+                using var connection = _dbConnectionFactory.CreateConnection();
                 connection.Open();
 
                 var parameters = new DynamicParameters();
@@ -69,21 +81,30 @@ namespace SistemaSolicitudesLaDat.Repository.Login
 
                 connection.Execute("registrar_intento_fallido", parameters, commandType: CommandType.StoredProcedure);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en RegistrarIntentoFallido: {ex.Message}");
+            }
         }
 
         public void ReiniciarIntentos(string nombreUsuario)
         {
-            if (string.IsNullOrWhiteSpace(nombreUsuario))
-                throw new ArgumentException("Nombre de usuario inválido", nameof(nombreUsuario));
-
-            using (var connection = _dbConnectionFactory.CreateConnection())
+            try
             {
+                if (string.IsNullOrWhiteSpace(nombreUsuario))
+                    throw new ArgumentException("Nombre de usuario inválido", nameof(nombreUsuario));
+
+                using var connection = _dbConnectionFactory.CreateConnection();
                 connection.Open();
 
                 var parameters = new DynamicParameters();
                 parameters.Add("@pI_nombreUsuario", nombreUsuario, DbType.String, ParameterDirection.Input);
 
                 connection.Execute("reiniciar_intentos", parameters, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en ReiniciarIntentos: {ex.Message}");
             }
         }
     }
