@@ -1,4 +1,5 @@
-﻿using SistemaSolicitudesLaDat.Repository.Infrastructure;
+﻿using SistemaSolicitudesLaDat.Repository.Bitacora;
+using SistemaSolicitudesLaDat.Repository.Infrastructure;
 using SistemaSolicitudesLaDat.Repository.Login;
 using SistemaSolicitudesLaDat.Repository.Usuarios;
 using SistemaSolicitudesLaDat.Service.Abstract;
@@ -6,6 +7,7 @@ using SistemaSolicitudesLaDat.Service.Encriptado;
 using SistemaSolicitudesLaDat.Service.Login;
 using SistemaSolicitudesLaDat.Service.Seguridad;
 using SistemaSolicitudesLaDat.Service.Usuarios;
+using SistemaSolicitudesLaDat.Service.Bitacora;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +21,12 @@ builder.Services.AddScoped<LoginRepository>();
 
 // Servicios
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IBitacoraService, BitacoraService>();
 builder.Services.AddScoped<IEncriptadoService, EncriptadoService>();
 builder.Services.AddScoped<ISeguridadService, SeguridadService>();
 builder.Services.AddScoped<LoginService>();
 builder.Services.AddScoped<EncriptadoService>();
+builder.Services.AddScoped<BitacoraRepository>();
 
 builder.Services.AddAuthentication("Cookies")
     .AddCookie("Cookies", options =>

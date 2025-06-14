@@ -1,11 +1,12 @@
 ﻿using Dapper;
 using Newtonsoft.Json;
-using SistemaSolicitudesLaDat.Entities.Usuarios;
 using SistemaSolicitudesLaDat.Repository.Infrastructure;
 using System.Data;
 
 namespace SistemaSolicitudesLaDat.Repository.Bitacora
 {
+    
+    
     public class BitacoraRepository
     {
         private readonly IDbConnectionFactory _dbConnectionFactory;

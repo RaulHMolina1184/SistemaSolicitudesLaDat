@@ -34,6 +34,7 @@ namespace SistemaSolicitudesLaDat.Pages
                 // Crear los claims
                 var claims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier, usuario.Id_Usuario),
                     new Claim(ClaimTypes.Name, usuario.Nombre_Usuario),
                     new Claim("NombreCompleto", usuario.Nombre_Completo),
                 };

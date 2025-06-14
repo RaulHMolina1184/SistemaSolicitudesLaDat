@@ -42,7 +42,16 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
                 Estado = Enum.Parse<EstadoUsuario>(UsuarioForm.Estado, ignoreCase: true)
             };
 
-            var resultado = await _usuarioService.InsertAsync(nuevoUsuario);
+            // Obtener el ID del usuario autenticado
+            var idUsuarioEjecutor = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(idUsuarioEjecutor))
+            {
+                ModelState.AddModelError(string.Empty, "No se pudo obtener el ID del usuario autenticado.");
+                return Page();
+            }
+
+            var resultado = await _usuarioService.InsertAsync(nuevoUsuario, idUsuarioEjecutor);
 
             if (resultado == 1)
             {

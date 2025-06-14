@@ -1,6 +1,7 @@
-﻿using SistemaSolicitudesLaDat.Service.Abstract;
-using SistemaSolicitudesLaDat.Entities.Usuarios;
+﻿using SistemaSolicitudesLaDat.Entities.Usuarios;
 using SistemaSolicitudesLaDat.Repository.Usuarios;
+using SistemaSolicitudesLaDat.Service.Abstract;
+
 
 namespace SistemaSolicitudesLaDat.Service.Usuarios
 {
@@ -8,10 +9,12 @@ namespace SistemaSolicitudesLaDat.Service.Usuarios
     {
 
         private readonly UsuarioRepository _usuarioRepository;
+        private readonly IBitacoraService _bitacoraService;
 
-        public UsuarioService(UsuarioRepository usuarioRepository)
+        public UsuarioService(UsuarioRepository usuarioRepository, IBitacoraService bitacoraService)
         {
             _usuarioRepository = usuarioRepository;
+            _bitacoraService = bitacoraService;
         }
 
         public Task<IEnumerable<Usuario>> GetAllAsync()
@@ -24,9 +27,34 @@ namespace SistemaSolicitudesLaDat.Service.Usuarios
             return _usuarioRepository.GetByIdAsync(id_usuario);
         }
 
-        public Task<int> InsertAsync(Usuario usuario)
+        public async Task<int> InsertAsync(Usuario usuario, string idUsuarioEjecutor)
         {
-            return _usuarioRepository.InsertAsync(usuario);
+            try
+            {
+                var resultado = await _usuarioRepository.InsertAsync(usuario);
+                if (resultado == 1)
+                {
+                    await _bitacoraService.RegistrarAccionAsync(
+                        idUsuarioEjecutor,
+                        "Usuario creado",
+                        new
+                        {
+                            usuario.Id_Usuario,
+                            usuario.Nombre_Usuario,
+                            usuario.Nombre_Completo,
+                            usuario.Correo_Electronico,
+                            Estado = usuario.Estado.ToString()
+                        }
+                    );
+                }
+
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                await _bitacoraService.RegistrarErrorAsync(idUsuarioEjecutor, ex.ToString());
+                throw;
+            }
         }
 
         public Task<int> UpdateAsync(Usuario usuario)
