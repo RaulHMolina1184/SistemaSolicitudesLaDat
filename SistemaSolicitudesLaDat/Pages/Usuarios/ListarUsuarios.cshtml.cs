@@ -12,10 +12,12 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
         public List<ListarUsuariosModel> Usuarios { get; set; } = new();
 
         private readonly IUsuarioService _usuarioService;
+        private readonly IBitacoraService _bitacoraService;
 
-        public IndexModel(IUsuarioService usuarioService)
+        public IndexModel(IUsuarioService usuarioService, IBitacoraService bitacoraService)
         {
             _usuarioService = usuarioService;
+            _bitacoraService = bitacoraService;
         }
 
         public async Task OnGetAsync()
@@ -30,6 +32,19 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
                 Correo_Electronico = u.Correo_Electronico,
                 Estado = u.Estado.ToString() 
             }).ToList();
+
+            // Obtener el ID del usuario autenticado
+            var idUsuarioEjecutor = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(idUsuarioEjecutor))
+            {
+                await _bitacoraService.RegistrarAccionAsync(
+                    idUsuarioEjecutor,
+                    "Consulta de lista de usuarios",
+                    new { TotalUsuarios = Usuarios.Count }
+                );
+            }
+
         }
 
         public async Task<IActionResult> OnPostEliminarAsync(string id_usuario)

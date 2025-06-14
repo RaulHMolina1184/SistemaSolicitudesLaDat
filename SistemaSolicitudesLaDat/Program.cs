@@ -44,8 +44,8 @@ builder.Services.AddRazorPages(options =>
     // Para proteger toda la carpeta /Usuarios
     options.Conventions.AuthorizeFolder("/Usuarios");
 
-    // Para permitir acceso anónimo al login
-    options.Conventions.AllowAnonymousToPage("/Login");
+    // Para permitir acceso anónimo al login(index)
+    options.Conventions.AllowAnonymousToPage("/Index");
 });
 
 var app = builder.Build();

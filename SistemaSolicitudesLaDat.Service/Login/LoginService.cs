@@ -1,5 +1,6 @@
 ﻿using SistemaSolicitudesLaDat.Entities.Usuarios;
 using SistemaSolicitudesLaDat.Repository.Login;
+using SistemaSolicitudesLaDat.Service.Bitacora;
 using SistemaSolicitudesLaDat.Service.Encriptado;
 
 namespace SistemaSolicitudesLaDat.Service.Login
@@ -40,7 +41,7 @@ namespace SistemaSolicitudesLaDat.Service.Login
 
                 if (esValida)
                 {
-                    _loginRepository.ReiniciarIntentos(nombreUsuario); // Resetear contador de intentos
+                    _loginRepository.ReiniciarIntentos(nombreUsuario);
                     return usuario;
                 }
                 else
