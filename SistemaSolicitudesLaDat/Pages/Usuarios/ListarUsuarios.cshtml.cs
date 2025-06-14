@@ -40,7 +40,16 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
                 return RedirectToPage();
             }
 
-            int resultado = await _usuarioService.DeleteAsync(id_usuario);
+            // Obtener ID del usuario autenticado
+            var idUsuarioEjecutor = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(idUsuarioEjecutor))
+            {
+                TempData["Mensaje"] = "No se pudo obtener el ID del usuario autenticado.";
+                return RedirectToPage();
+            }
+
+            int resultado = await _usuarioService.DeleteAsync(id_usuario, idUsuarioEjecutor);
 
             TempData["Mensaje"] = resultado == 1
                 ? "Usuario eliminado correctamente."
@@ -48,5 +57,6 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
 
             return RedirectToPage();
         }
+
     }
 }

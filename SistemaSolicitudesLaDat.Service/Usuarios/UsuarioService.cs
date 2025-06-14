@@ -57,15 +57,58 @@ namespace SistemaSolicitudesLaDat.Service.Usuarios
             }
         }
 
-        public Task<int> UpdateAsync(Usuario usuario)
+        public async Task<int> UpdateAsync(Usuario usuario, string idUsuarioEjecutor)
         {
-            return _usuarioRepository.UpdateAsync(usuario);
+            try
+            {
+                var resultado = await _usuarioRepository.UpdateAsync(usuario);
+                if (resultado == 1)
+                {
+                    await _bitacoraService.RegistrarAccionAsync(
+                        idUsuarioEjecutor,
+                        "Usuario actualizado",
+                        new
+                        {
+                            usuario.Id_Usuario,
+                            usuario.Nombre_Usuario,
+                            usuario.Nombre_Completo,
+                            usuario.Correo_Electronico,
+                            Estado = usuario.Estado.ToString()
+                        }
+                    );
+                }
+
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                await _bitacoraService.RegistrarErrorAsync(idUsuarioEjecutor, ex.ToString());
+                throw;
+            }
         }
 
-        public Task<int> DeleteAsync(string id_usuario)
+        public async Task<int> DeleteAsync(string id_usuario, string idUsuarioEjecutor)
         {
-            return _usuarioRepository.DeleteAsync(id_usuario);
+            try
+            {
+                var resultado = await _usuarioRepository.DeleteAsync(id_usuario);
+                if (resultado == 1)
+                {
+                    await _bitacoraService.RegistrarAccionAsync(
+                        idUsuarioEjecutor,
+                        "Usuario eliminado",
+                        new { Id_Usuario = id_usuario }
+                    );
+                }
+
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                await _bitacoraService.RegistrarErrorAsync(idUsuarioEjecutor, ex.ToString());
+                throw;
+            }
         }
+
     }
-
 }

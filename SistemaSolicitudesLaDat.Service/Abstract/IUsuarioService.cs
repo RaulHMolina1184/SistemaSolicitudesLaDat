@@ -7,7 +7,7 @@ namespace SistemaSolicitudesLaDat.Service.Abstract
         Task<IEnumerable<Usuario>> GetAllAsync();
         Task<Usuario?> GetByIdAsync(string id);
         Task<int> InsertAsync(Usuario usuario, string idUsuarioEjecutor);
-        Task<int> UpdateAsync(Usuario usuario);
-        Task<int> DeleteAsync(string id);
+        Task<int> UpdateAsync(Usuario usuario, string idUsuarioEjecutor);  
+        Task<int> DeleteAsync(string id_usuario, string idUsuarioEjecutor);
     }
 }

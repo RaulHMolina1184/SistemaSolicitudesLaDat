@@ -54,7 +54,16 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
                 Estado = Enum.Parse<EstadoUsuario>(Usuario.Estado)
             };
 
-            var actualizado = await _usuarioService.UpdateAsync(usuarioActualizar);
+            // Obtener ID del usuario autenticado
+            var idUsuarioEjecutor = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(idUsuarioEjecutor))
+            {
+                TempData["Mensaje"] = "Error al verificar credenciales del usuario, consulte al departamento de TI.";
+                return RedirectToPage("/Usuarios/ListarUsuarios");
+            }
+
+            var actualizado = await _usuarioService.UpdateAsync(usuarioActualizar, idUsuarioEjecutor);
 
             if (actualizado == 1)
                 TempData["Mensaje"] = "Usuario actualizado correctamente.";
@@ -63,5 +72,6 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
 
             return RedirectToPage("ListarUsuarios");
         }
+
     }
 }

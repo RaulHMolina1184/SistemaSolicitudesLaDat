@@ -62,6 +62,5 @@ namespace SistemaSolicitudesLaDat.Repository.Bitacora
                 return false;
             }
         }
-
     }
 }

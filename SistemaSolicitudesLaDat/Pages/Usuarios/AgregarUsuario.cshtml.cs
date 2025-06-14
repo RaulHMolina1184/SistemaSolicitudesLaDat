@@ -47,8 +47,8 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
 
             if (string.IsNullOrEmpty(idUsuarioEjecutor))
             {
-                ModelState.AddModelError(string.Empty, "No se pudo obtener el ID del usuario autenticado.");
-                return Page();
+                TempData["Mensaje"] = "Error al verificar credenciales del usuario, consulte al departamento de TI.";
+                return RedirectToPage("/Usuarios/ListarUsuarios");
             }
 
             var resultado = await _usuarioService.InsertAsync(nuevoUsuario, idUsuarioEjecutor);
@@ -60,8 +60,8 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Hubo un error al agregar el usuario.");
-                return Page();
+                TempData["Mensaje"] = "Error al agregar usuario.";
+                return RedirectToPage("/Usuarios/ListarUsuarios");
             }
         }
     }
