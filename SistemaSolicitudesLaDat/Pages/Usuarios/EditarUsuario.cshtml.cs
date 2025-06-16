@@ -54,7 +54,7 @@ namespace SistemaSolicitudesLaDat.Pages.Usuarios
                 Estado = Enum.Parse<EstadoUsuario>(Usuario.Estado)
             };
 
-            // Obtener ID del usuario autenticado
+            // Obtener ID del usuario autenticado para registrar la acción en la bitácora
             var idUsuarioEjecutor = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(idUsuarioEjecutor))

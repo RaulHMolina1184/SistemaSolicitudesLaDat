@@ -119,5 +119,30 @@ namespace SistemaSolicitudesLaDat.Repository.Usuarios
                 return 0; // Retorna `0` en caso de error
             }
         }
+
+        public async Task<IEnumerable<Usuario>> GetUsuariosPaginadosAsync(int pagina, int tamanoPagina)
+        {
+            using var connection = _dbConnectionFactory.CreateConnection();
+
+            var parameters = new DynamicParameters();
+            parameters.Add("pI_pagina", pagina);
+            parameters.Add("pI_tamano_pagina", tamanoPagina);
+
+            return await connection.QueryAsync<Usuario>(
+                "mostrar_usuarios_paginado",
+                parameters,
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public async Task<int> CuentaUsuariosAsync()
+        {
+            using var connection = _dbConnectionFactory.CreateConnection();
+
+            return await connection.ExecuteScalarAsync<int>(
+                "cuenta_usuarios"
+            );
+        }
+
     }
 }

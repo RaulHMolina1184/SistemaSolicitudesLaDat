@@ -8,49 +8,94 @@
 <h1 class="mt-4">Administración de Usuarios</h1>
 
 <p>
-    <a class="btn btn-dark" asp-page="AgregarUsuario">+ Nuevo Usuario</a>
+    <a class="btn btn-dark" asp-page="AgregarUsuario">Nuevo</a>
 </p>
 
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>#</th>
-            <th>Id Usuario</th>
-            <th>Nombre de Usuario</th>
-            <th>Nombre Completo</th>
-            <th>Correo Electrónico</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int i = 0; i < Model.Usuarios.Count; i++)
-        {
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
             <tr>
-                <th scope="row">@(@i + 1)</th>
-                <td>@Model.Usuarios[i].Id_Usuario</td>
-                <td>@Model.Usuarios[i].Nombre_Usuario</td>
-                <td>@Model.Usuarios[i].Nombre_Completo</td>
-                <td>@Model.Usuarios[i].Correo_Electronico</td>
-                <td>@Model.Usuarios[i].Estado</td>
-                <td>
-                    <a class="btn btn-sm btn-outline-secondary"
-                       asp-page="EditarUsuario"
-                       asp-route-id="@Model.Usuarios[i].Id_Usuario">Editar</a>
-
-                    <button type="button"
-                            class="btn btn-sm btn-dark"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalEliminar"
-                            data-id="@Model.Usuarios[i].Id_Usuario"
-                            data-nombre="@Model.Usuarios[i].Nombre_Usuario">
-                        Eliminar
-                    </button>
-                </td>
+                <th>#</th>
+                <th>Id Usuario</th>
+                <th style="white-space: nowrap;">Nombre de Usuario</th>
+                <th>Nombre Completo</th>
+                <th>Correo Electrónico</th>
+                <th>Estado</th>
+                <th style="white-space: nowrap;">Acciones</th>
             </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Usuarios.Count; i++)
+            {
+                <tr>
+                    <th scope="row">@(@i + 1)</th>
+                    <td>@Model.Usuarios[i].Id_Usuario</td>
+                    <td style="white-space: nowrap;">@Model.Usuarios[i].Nombre_Usuario</td>
+                    <td>@Model.Usuarios[i].Nombre_Completo</td>
+                    <td>@Model.Usuarios[i].Correo_Electronico</td>
+
+                    <td>
+                        <form method="post" asp-page-handler="CambiarEstado" class="d-inline">
+                            <input type="hidden" name="id_usuario" value="@Model.Usuarios[i].Id_Usuario" />
+                            <select name="nuevo_estado" class="form-select form-select-sm"
+                                    onchange="this.form.submit()">
+                                @foreach (var estado in Enum.GetValues(typeof(SistemaSolicitudesLaDat.Entities.Usuarios.EstadoUsuario)))
+                                {
+                                    <option value="@estado"
+                                            selected="@(estado.ToString() == Model.Usuarios[i].Estado ? "selected" : null)">
+                                        @estado
+                                    </option>
+                                }
+                            </select>
+                        </form>
+                    </td>
+
+                    <td style="white-space: nowrap;">
+                        <a class="btn btn-sm btn-outline-secondary"
+                           asp-page="EditarUsuario"
+                           asp-route-id="@Model.Usuarios[i].Id_Usuario">Editar</a>
+
+                        <button type="button"
+                                class="btn btn-sm btn-dark"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalEliminar"
+                                data-id="@Model.Usuarios[i].Id_Usuario"
+                                data-nombre="@Model.Usuarios[i].Nombre_Usuario">
+                            Eliminar
+                        </button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<nav aria-label="Paginación de usuarios" class="mt-4">
+    <ul class="pagination pagination-dark justify-content-center">
+        @if (Model.PaginaActual > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-pagina="@(Model.PaginaActual - 1)">Anterior</a>
+            </li>
         }
-    </tbody>
-</table>
+
+        @for (int i = 1; i <= Model.TotalPaginas; i++)
+        {
+            <li class="page-item disabled @(i == Model.PaginaActual ? "active" : "")">
+                <a class="page-link" asp-route-pagina="@i">@i</a>
+            </li>
+        }
+
+        @if (Model.PaginaActual < Model.TotalPaginas)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-pagina="@(Model.PaginaActual + 1)">Siguiente</a>
+            </li>
+        }
+    </ul>
+</nav>
+
 
 @if (TempData["Mensaje"] != null)
 {
@@ -94,5 +139,3 @@
         });
     </script>
 }
-
-

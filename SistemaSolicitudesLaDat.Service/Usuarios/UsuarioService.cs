@@ -61,19 +61,18 @@ namespace SistemaSolicitudesLaDat.Service.Usuarios
         {
             try
             {
+                var usuarioAnterior = await _usuarioRepository.GetByIdAsync(usuario.Id_Usuario);
                 var resultado = await _usuarioRepository.UpdateAsync(usuario);
-                if (resultado == 1)
+
+                if (resultado == 1 && usuarioAnterior != null)
                 {
                     await _bitacoraService.RegistrarAccionAsync(
                         idUsuarioEjecutor,
                         "Usuario actualizado",
                         new
                         {
-                            usuario.Id_Usuario,
-                            usuario.Nombre_Usuario,
-                            usuario.Nombre_Completo,
-                            usuario.Correo_Electronico,
-                            Estado = usuario.Estado.ToString()
+                            Antes = usuarioAnterior,
+                            Despues = usuario
                         }
                     );
                 }
@@ -86,6 +85,7 @@ namespace SistemaSolicitudesLaDat.Service.Usuarios
                 throw;
             }
         }
+
 
         public async Task<int> DeleteAsync(string id_usuario, string idUsuarioEjecutor)
         {
@@ -128,5 +128,16 @@ namespace SistemaSolicitudesLaDat.Service.Usuarios
                 throw;
             }
         }
+
+        public Task<IEnumerable<Usuario>> GetUsuariosPaginadosAsync(int pagina, int tamanoPagina)
+        {
+            return _usuarioRepository.GetUsuariosPaginadosAsync(pagina, tamanoPagina);
+        }
+
+        public Task<int> CuentaUsuariosAsync()
+        {
+            return _usuarioRepository.CuentaUsuariosAsync();
+        }
+
     }
 }
