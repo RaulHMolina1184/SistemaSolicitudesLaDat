@@ -77,7 +77,7 @@ namespace SistemaSolicitudesLaDat.Pages
                 try
                 {
                    bool guardado = await _bitacoraService.RegistrarAccionAsync(
-                        "anonimo",
+                        null,
                         "Intento de acceso no autorizado",
                         new
                         {

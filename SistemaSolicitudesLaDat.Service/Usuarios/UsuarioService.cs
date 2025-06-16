@@ -91,13 +91,32 @@ namespace SistemaSolicitudesLaDat.Service.Usuarios
         {
             try
             {
+                // 1. Obtener los datos actuales del usuario antes de eliminar
+                var usuarioExistente = await _usuarioRepository.GetByIdAsync(id_usuario);
+
+                if (usuarioExistente == null)
+                {
+                    // Puedes registrar un intento de eliminación fallido si lo deseas
+                    return 0; // No existe, no hay nada que eliminar
+                }
+
+                // 2. Eliminar
                 var resultado = await _usuarioRepository.DeleteAsync(id_usuario);
+
+                // 3. Registrar en bitácora solo si fue exitoso
                 if (resultado == 1)
                 {
                     await _bitacoraService.RegistrarAccionAsync(
                         idUsuarioEjecutor,
                         "Usuario eliminado",
-                        new { Id_Usuario = id_usuario }
+                        new
+                        {
+                            usuarioExistente.Id_Usuario,
+                            usuarioExistente.Nombre_Usuario,
+                            usuarioExistente.Nombre_Completo,
+                            usuarioExistente.Correo_Electronico,
+                            usuarioExistente.Estado
+                        }
                     );
                 }
 
@@ -109,6 +128,5 @@ namespace SistemaSolicitudesLaDat.Service.Usuarios
                 throw;
             }
         }
-
     }
 }
