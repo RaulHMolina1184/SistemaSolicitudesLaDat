@@ -1,0 +1,38 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Solicitudes.ListarModel
+@{
+    ViewData["Title"] = "Solicitudes Registradas";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Solicitudes Registradas</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">@TempData["Mensaje"]</div>
+}
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>ID Solicitud</th>
+            <th>Título</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Solicitudes.Count; i++)
+        {
+            var s = Model.Solicitudes[i];
+            <tr>
+                <td>@(@i + 1)</td>
+                <td>@s.IdSolicitud</td>
+                <td>@s.Titulo</td>
+                <td>
+                    <a asp-page="/Tareas/Listar" asp-route-idSolicitud="@s.IdSolicitud" class="btn btn-sm btn-outline-secondary">Tareas</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
