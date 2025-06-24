@@ -1,0 +1,70 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Reportes.TareasPorSolicitudModel
+@{
+    ViewData["Title"] = "Reporte de Tareas por Solicitud";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Reporte de Tareas por Solicitud</h1>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-4">
+        <label class="form-label">Solicitud</label>
+        <select asp-for="IdSolicitud" class="form-select" asp-items="Model.Solicitudes">
+            <option value="">Seleccione una solicitud</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Mes</label>
+        <select asp-for="Mes" class="form-select">
+            @for (int i = 1; i <= 12; i++)
+            {
+                <option value="@i">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Año</label>
+        <input type="number" asp-for="Anio" class="form-control" />
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-dark">Generar Reporte</button>
+    </div>
+</form>
+
+@if (Model.Reporte.Tareas.Any())
+{
+    <h5>Resultado del reporte:</h5>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Usuario</th>
+                <th>Fecha</th>
+                <th>Descripción de la tarea</th>
+                <th>Horas invertidas</th>
+                <th>Consecutivo del oficio de la solicitud</th>
+                <th>Título de solicitud</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model.Reporte.Tareas)
+            {
+                <tr>
+                    <td>@t.Usuario</td>
+                    <td>@t.Fecha.ToString("dd/MM/yyyy")</td>
+                    <td>@t.Descripcion</td>
+                    <td>@t.HorasInvertidas</td>
+                    <td>@t.ConsecutivoOficio</td>
+                    <td>@t.TituloSolicitud</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="alert alert-info">
+        Total de horas invertidas: <strong>@Model.Reporte.TotalHoras</strong>
+    </div>
+}
+else if (Model.Reporte.Tareas.Count == 0 && Model.BusquedaRealizada)
+{
+    <div class="alert alert-warning">No se encontraron tareas para los criterios seleccionados.</div>
+}

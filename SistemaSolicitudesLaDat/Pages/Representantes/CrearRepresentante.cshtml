@@ -1,0 +1,49 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Representantes.CrearRepresentanteModel
+@{
+    ViewData["Title"] = "Nuevo Representante";
+    Layout = "_PrincipalLayout";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Registrar Representante</h2>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-info">@TempData["Mensaje"]</div>
+    }
+
+    <form method="post" class="col-md-6">
+        <div class="mb-3">
+            <label asp-for="Formulario.Nombre" class="form-label"></label>
+            <input asp-for="Formulario.Nombre" class="form-control" />
+            <span asp-validation-for="Formulario.Nombre" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Formulario.Email" class="form-label"></label>
+            <input asp-for="Formulario.Email" class="form-control" type="email" />
+            <span asp-validation-for="Formulario.Email" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-dark">Guardar</button>
+        <a asp-page="ListarRepresentantes" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,95 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Tareas.ListarModel
+@{
+    ViewData["Title"] = "Administración de Tareas";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Administración de Tareas</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">@TempData["Mensaje"]</div>
+}
+
+<div class="text-end mb-3">
+    <a asp-page="Agregar" asp-route-idSolicitud="@Model.IdSolicitud" class="btn btn-dark">+ Nueva Tarea</a>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Horas</th>
+            <th>Usuario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.ListaTareas.Count; i++)
+        {
+            var item = Model.ListaTareas[i];
+            <tr>
+                <th scope="row">@(@i + 1)</th>
+                <td>@item.Descripcion</td>
+                <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                <td>@item.HorasInvertidas</td>
+                <td>@item.NombreUsuario</td>
+                @* @item.IdTarea *@
+                <td>
+                    <a class="btn btn-sm btn-outline-secondary"
+                       asp-page="/Tareas/Editar"
+                       asp-route-id="@item.IdTarea">Editar</a>
+
+                    <button type="button"
+                            class="btn btn-sm btn-dark"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalEliminar"
+                            data-id="@item.IdTarea"
+                            data-nombre="@item.Descripcion">
+                        Eliminar
+                    </button>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- Modal de eliminación de tarea -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Eliminar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Realmente desea eliminar la tarea: <strong id="nombreTarea"></strong>?
+                </div>
+                <input type="hidden" name="id" id="tareaIdEliminar" />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-dark">Sí, eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const modalEliminar = document.getElementById('modalEliminar');
+        modalEliminar.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+            const descripcion = button.getAttribute('data-nombre');
+
+            document.getElementById('tareaIdEliminar').value = id;
+            document.getElementById('nombreTarea').textContent = descripcion;
+        });
+    </script>
+}

@@ -1,0 +1,31 @@
+﻿@page "{id}"
+@model SistemaSolicitudesLaDat.Pages.Tareas.EditarModel
+@{
+    ViewData["Title"] = "Editar Tarea";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Editar Tarea</h1>
+
+<form method="post" class="w-50">
+    <input type="hidden" asp-for="Tarea.IdTarea" />
+    <input type="hidden" asp-for="Tarea.IdSolicitud" />
+
+    <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-control" asp-for="Tarea.Descripcion" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Fecha</label>
+        <input type="date" class="form-control" asp-for="Tarea.Fecha" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Horas Invertidas</label>
+        <input type="number" step="0.5" class="form-control" asp-for="Tarea.HorasInvertidas" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    <a asp-page="Listar" asp-route-idSolicitud="@Model.Tarea.IdSolicitud" class="btn btn-secondary">Cancelar</a>
+</form>
+
+<partial name="_ValidationScriptsPartial" />

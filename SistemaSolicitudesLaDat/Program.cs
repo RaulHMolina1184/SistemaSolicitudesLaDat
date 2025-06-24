@@ -8,6 +8,15 @@ using SistemaSolicitudesLaDat.Service.Login;
 using SistemaSolicitudesLaDat.Service.Seguridad;
 using SistemaSolicitudesLaDat.Service.Usuarios;
 using SistemaSolicitudesLaDat.Service.Bitacora;
+using SistemaSolicitudesLaDat.Repository.Representantes;
+using SistemaSolicitudesLaDat.Service.Representantes;
+using SistemaSolicitudesLaDat.Repository.Tareas;
+using SistemaSolicitudesLaDat.Service.Tareas;
+using SistemaSolicitudesLaDat.Service.Solicitudes;
+using SistemaSolicitudesLaDat.Repository.Reportes;
+using SistemaSolicitudesLaDat.Repository.Solicitudes;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +36,23 @@ builder.Services.AddScoped<ISeguridadService, SeguridadService>();
 builder.Services.AddScoped<LoginService>();
 builder.Services.AddScoped<EncriptadoService>();
 builder.Services.AddScoped<BitacoraRepository>();
+builder.Services.AddScoped<IRepresentanteRepository, RepresentanteRepository>();
+
+builder.Services.AddScoped<IRepresentanteService, RepresentanteService>();
+builder.Services.AddScoped<IRepresentanteService, RepresentanteService>();
+
+builder.Services.AddScoped<TareaRepository>();
+builder.Services.AddScoped<TareaService>();
+
+builder.Services.AddScoped<BitacoraRepository>();
+builder.Services.AddScoped<BitacoraService>();
+
+builder.Services.AddScoped<SolicitudService>();
+
+builder.Services.AddScoped<ReporteRepository>();
+
+builder.Services.AddScoped<SolicitudRepository>();
+
 
 builder.Services.AddAuthentication("Cookies")
     .AddCookie("Cookies", options =>
