@@ -1,0 +1,122 @@
+﻿@page "{IdSolicitud}"
+@model SistemaSolicitudesLaDat.Pages.Solicitudes.Desgloses.CrearDesglosesModel
+@{
+    ViewData["Title"] = "Crear Desglose";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Crear Desglose para la Solicitud @Model.IdSolicitud</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">@TempData["Mensaje"]</div>
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="background-color: #d9d9d9;">
+        <div class="card-body">
+            <form method="post" novalidate>
+                <input type="hidden" asp-for="Desglose.id_solicitud" />
+
+                <div class="mb-3">
+                    <label asp-for="Desglose.mes" class="form-label">Mes</label>
+                    <select asp-for="Desglose.mes" class="form-select">
+                        <option value="">Seleccione un mes</option>
+                        @foreach (var mes in Model.Meses)
+                        {
+                            <option value="@mes.Value" selected="@(mes.Value == Model.Desglose.mes.ToString())">@mes.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Desglose.mes" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Desglose.anio" class="form-label">Año</label>
+                    <input asp-for="Desglose.anio" type="number" class="form-control" min="2000" max="2100" />
+                    <span asp-validation-for="Desglose.anio" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Desglose.horas" class="form-label">Horas</label>
+                    <input asp-for="Desglose.horas" type="number" class="form-control" min="1" max="24" />
+                    <span asp-validation-for="Desglose.horas" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Desglose.monto" class="form-label">Monto</label>
+                    <input asp-for="Desglose.monto" id="montoInput" type="number" class="form-control" step="0.01" min="0" oninput="calcularTotal()" />
+                    <span asp-validation-for="Desglose.monto" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Desglose.id_iva" class="form-label">IVA</label>
+                    <select asp-for="Desglose.id_iva" id="ivaSelect" class="form-select" onchange="calcularTotal()">
+                        <option value="">Seleccione IVA</option>
+                        @foreach (var iva in Model.Ivas)
+                        {
+                            <option value="@iva.Value" selected="@(iva.Value == Model.Desglose.id_iva)">@iva.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Desglose.id_iva" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Total</label>
+                    <input asp-for="Desglose.total" id="totalInput" type="hidden" />
+                    <input id="totalDisplay" type="text" class="form-control" readonly />
+                    <span asp-validation-for="Desglose.total" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Desglose.observaciones" class="form-label">Observaciones</label>
+                    <textarea asp-for="Desglose.observaciones" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Desglose.observaciones" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Desglose.porcentaje_cobro" class="form-label">Porcentaje de Cobro (%)</label>
+                    <input asp-for="Desglose.porcentaje_cobro" type="number" class="form-control" step="0.01" min="0" max="100" />
+                    <span asp-validation-for="Desglose.porcentaje_cobro" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-dark">Guardar</button>
+                <a asp-page="/Solicitudes/Desgloses/ListarDesgloses" asp-route-IdSolicitud="@Model.IdSolicitud" class="btn btn-outline-secondary ms-2">Regresar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const ivaMap = {
+            @foreach (var iva in Model.IvaPorcentajes)
+            {
+                    <text>'@iva.Key': @iva.Value.ToString(System.Globalization.CultureInfo.InvariantCulture),</text>
+            }
+        };
+
+        function calcularTotal() {
+            const monto = parseFloat(document.getElementById('montoInput').value);
+            const ivaId = document.getElementById('ivaSelect').value;
+
+            if (isNaN(monto) || !ivaId || !ivaMap[ivaId]) {
+                document.getElementById('totalInput').value = "";
+                document.getElementById('totalDisplay').value = "";
+                return;
+            }
+
+            const iva = parseFloat(ivaMap[ivaId]);
+            const total = monto * (1 + iva);
+
+            document.getElementById('totalInput').value = total.toFixed(2).replace('.', ',');
+
+            document.getElementById('totalDisplay').value = total.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        window.onload = calcularTotal;
+    </script>
+}

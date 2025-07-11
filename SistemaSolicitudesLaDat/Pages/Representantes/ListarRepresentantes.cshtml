@@ -1,0 +1,129 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Representantes.ListarRepresentanteModel
+@{
+    ViewData["Title"] = "Administración de Representantes";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Administración de Representantes</h1>
+
+<p>
+    <a class="btn btn-dark" asp-page="AgregarRepresentantes">Nuevo Representante</a>
+</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>ID Representante</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Representantes.Any())
+            {
+                <tr>
+                    <td colspan="5" class="text-center">No hay datos para mostrar</td>
+                </tr>
+            }
+            else
+            {
+                int indexBase = (Model.PaginaActual - 1) * 5;
+
+                for (int i = 0; i < Model.Representantes.Count; i++)
+                {
+                    var representante = Model.Representantes[i];
+
+                    <tr>
+                        <th scope="row">@(indexBase + i + 1)</th>
+                        <td>@representante.id_representante</td>
+                        <td>@representante.nombre</td>
+                        <td>@representante.email</td>
+                        <td style="white-space: nowrap;">
+                            <a class="btn btn-sm btn-outline-secondary" asp-page="EditarRepresentantes" asp-route-id="@representante.id_representante"><i class="fas fa-edit"></i></a>
+                            <button type="button"
+                                    class="btn btn-sm btn-dark"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEliminar"
+                                    data-id="@representante.id_representante"
+                                    data-nombre="@representante.nombre">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<nav aria-label="Paginación de representantes" class="mt-4">
+    <ul class="pagination pagination-dark justify-content-center">
+        @if (Model.PaginaActual > 1)
+        {
+            <li class="page-item">
+                <a class="page-link text-white bg-dark" asp-route-pagina="@(Model.PaginaActual - 1)">Anterior</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.TotalPaginas; i++)
+        {
+            <li class="page-item @(i == Model.PaginaActual ? "active" : "")">
+                <a class="page-link text-white bg-dark" asp-route-pagina="@i">@i</a>
+            </li>
+        }
+
+        @if (Model.PaginaActual < Model.TotalPaginas)
+        {
+            <li class="page-item">
+                <a class="page-link text-white bg-dark" asp-route-pagina="@(Model.PaginaActual + 1)">Siguiente</a>
+            </li>
+        }
+    </ul>
+</nav>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-dark" role="alert">
+        @TempData["Mensaje"]
+    </div>
+}
+
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Eliminar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Realmente desea eliminar el representante: <strong id="nombreRepresentante"></strong>?
+                </div>
+                <input type="hidden" name="id_representante" id="representanteIdEliminar" />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-dark">Sí, eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const modalEliminar = document.getElementById('modalEliminar');
+        modalEliminar.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const idRepresentante = button.getAttribute('data-id');
+            const nombreRepresentante = button.getAttribute('data-nombre');
+
+            document.getElementById('representanteIdEliminar').value = idRepresentante;
+            document.getElementById('nombreRepresentante').textContent = nombreRepresentante;
+        });
+    </script>
+}

@@ -1,0 +1,45 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Representantes.EditarRepresentanteModel
+@{
+    ViewData["Title"] = "Editar Representante";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Editar Representante</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">@TempData["Mensaje"]</div>
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="background-color: #d9d9d9;">
+        <div class="card-body">
+            <form method="post">
+
+                <input type="hidden" asp-for="Representante.id_representante" />
+
+                <div class="mb-3">
+                    <label asp-for="Representante.nombre" class="form-label">Nombre</label>
+                    <input asp-for="Representante.nombre" class="form-control" />
+                    <span asp-validation-for="Representante.nombre" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Representante.email" class="form-label">Email</label>
+                    <input asp-for="Representante.email" class="form-control" />
+                    <span asp-validation-for="Representante.email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-dark">Actualizar</button>
+                    <a asp-page="/Representantes/ListarRepresentantes" class="btn btn-outline-secondary ms-2">Regresar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
