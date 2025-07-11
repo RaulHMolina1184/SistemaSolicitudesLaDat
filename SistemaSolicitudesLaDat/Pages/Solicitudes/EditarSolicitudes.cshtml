@@ -1,0 +1,97 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Solicitudes.EditarSolicitudesModel
+@{
+    ViewData["Title"] = "Editar Solicitud";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Editar Solicitud</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">@TempData["Mensaje"]</div>
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="background-color: #d9d9d9;">
+        <div class="card-body">
+            <form method="post">
+
+                <input type="hidden" asp-for="Solicitud.id_solicitud" />
+
+                <div class="mb-3">
+                    <label asp-for="Solicitud.consecutivo_oficio" class="form-label">Consecutivo Oficio</label>
+                    <input asp-for="Solicitud.consecutivo_oficio" class="form-control" />
+                    <span asp-validation-for="Solicitud.consecutivo_oficio" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solicitud.documento_respuesta" class="form-label"></label>
+                    <textarea asp-for="Solicitud.documento_respuesta" class="form-control"></textarea>
+                    <span asp-validation-for="Solicitud.documento_respuesta" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solicitud.documento_inicio" class="form-label"></label>
+                    <textarea asp-for="Solicitud.documento_inicio" class="form-control"></textarea>
+                    <span asp-validation-for="Solicitud.documento_inicio" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solicitud.titulo_solicitud" class="form-label"></label>
+                    <input asp-for="Solicitud.titulo_solicitud" class="form-control" />
+                    <span asp-validation-for="Solicitud.titulo_solicitud" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solicitud.descripcion" class="form-label">Descripción</label>
+                    <textarea asp-for="Solicitud.descripcion" class="form-control"></textarea>
+                    <span asp-validation-for="Solicitud.descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solicitud.id_representante" class="form-label">Representante</label>
+                    <select asp-for="Solicitud.id_representante" asp-items="Model.Representantes" class="form-select"></select>
+                    <span asp-validation-for="Solicitud.id_representante" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solicitud.observaciones" class="form-label">Observaciones</label>
+                    <textarea asp-for="Solicitud.observaciones" class="form-control"></textarea>
+                    <span asp-validation-for="Solicitud.observaciones" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solicitud.estado_solicitud" class="form-label">Estado</label>
+                    <select asp-for="Solicitud.estado_solicitud" asp-items="Model.Estados" class="form-select"></select>
+                    <span asp-validation-for="Solicitud.estado_solicitud" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solicitud.fecha_ingreso" class="form-label">Fecha de Ingreso</label>
+                    <input asp-for="Solicitud.fecha_ingreso" type="date" class="form-control" />
+                    <span asp-validation-for="Solicitud.fecha_ingreso" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solicitud.fecha_respuesta" class="form-label">Fecha de Respuesta</label>
+                    <input asp-for="Solicitud.fecha_respuesta" type="date" class="form-control" />
+                    <span asp-validation-for="Solicitud.fecha_respuesta" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solicitud.fecha_inicio" class="form-label">Fecha de Inicio</label>
+                    <input asp-for="Solicitud.fecha_inicio" type="date" class="form-control" />
+                    <span asp-validation-for="Solicitud.fecha_inicio" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-dark">Actualizar</button>
+                <a asp-page="/Solicitudes/ListarSolicitudes" class="btn btn-outline-secondary ms-2">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

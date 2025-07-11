@@ -1,0 +1,140 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Solicitudes.IndexModel
+@{
+    ViewData["Title"] = "Administración de Solicitudes";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Administración de Solicitudes</h1>
+
+<p>
+    <a class="btn btn-dark" asp-page="CrearSolicitudes">Nueva Solicitud</a>
+</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Consecutivo de oficio</th>
+                <th>Documento de respuesta</th>
+                <th>Documento de inicio</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Representante</th>
+                <th>Observaciones</th>
+                <th>Estado</th>
+                <th>Fecha de ingreso</th>
+                <th>Fecha de respuesta</th>
+                <th>Fecha de inicio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Solicitudes.Any())
+            {
+                <tr>
+                    <td colspan="12" class="text-center">No hay datos para mostrar</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var solicitud in Model.Solicitudes)
+                {
+                    <tr class="@Model.ObtenerColorFila(solicitud)">
+                        <td>@solicitud.consecutivo_oficio</td>
+                        <td>@solicitud.documento_respuesta</td>
+                        <td>@solicitud.documento_inicio</td>
+                        <td>@solicitud.titulo_solicitud</td>
+                        <td>@solicitud.descripcion</td>
+                        <td>@solicitud.RepresentanteNombre</td>
+                        <td>@solicitud.observaciones</td>
+                        <td>@solicitud.EstadoNombre</td>
+                        <td>@solicitud.fecha_ingreso?.ToString("dd/MM/yyyy")</td>
+                        <td>@solicitud.fecha_respuesta?.ToString("dd/MM/yyyy")</td>
+                        <td>@solicitud.fecha_inicio?.ToString("dd/MM/yyyy")</td>
+                        <td style="white-space: nowrap;">
+                            <a class="btn btn-sm btn-outline-secondary" asp-page="EditarSolicitudes" asp-route-id="@solicitud.id_solicitud">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-id="@solicitud.id_solicitud" data-nombre="@solicitud.titulo_solicitud">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <a class="btn btn-sm btn-outline-secondary" asp-page="Desgloses/ListarDesgloses" asp-route-id="@solicitud.id_solicitud">
+                                <i class="fas fa-list"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<nav aria-label="Paginación de solicitudes" class="mt-4">
+    <ul class="pagination pagination-dark justify-content-center">
+        @if (Model.PaginaActual > 1)
+        {
+            <li class="page-item">
+                <a class="page-link text-white bg-dark" asp-route-pagina="@(Model.PaginaActual - 1)">Anterior</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.TotalPaginas; i++)
+        {
+            <li class="page-item @(i == Model.PaginaActual ? "active" : "")">
+                <a class="page-link text-white bg-dark" asp-route-pagina="@i">@i</a>
+            </li>
+        }
+
+        @if (Model.PaginaActual < Model.TotalPaginas)
+        {
+            <li class="page-item">
+                <a class="page-link text-white bg-dark" asp-route-pagina="@(Model.PaginaActual + 1)">Siguiente</a>
+            </li>
+        }
+    </ul>
+</nav>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-dark" role="alert">
+        @TempData["Mensaje"]
+    </div>
+}
+
+<!-- Modal para eliminar -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Eliminar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Realmente desea eliminar la solicitud: <strong id="nombreSolicitud"></strong>?
+                </div>
+                <input type="hidden" name="id_solicitud" id="solicitudIdEliminar" />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-dark">Sí, eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const modalEliminar = document.getElementById('modalEliminar');
+        modalEliminar.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const idSolicitud = button.getAttribute('data-id');
+            const nombreSolicitud = button.getAttribute('data-nombre');
+
+            document.getElementById('solicitudIdEliminar').value = idSolicitud;
+            document.getElementById('nombreSolicitud').textContent = nombreSolicitud;
+        });
+    </script>
+}

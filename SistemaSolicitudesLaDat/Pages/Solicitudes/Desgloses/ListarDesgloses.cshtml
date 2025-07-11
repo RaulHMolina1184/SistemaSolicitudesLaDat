@@ -1,0 +1,139 @@
+﻿@page "{id}"
+@model SistemaSolicitudesLaDat.Pages.Solicitudes.Desgloses.ListarDesglosesModel
+@{
+    ViewData["Title"] = "Desgloses de Solicitud";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Desgloses de la Solicitud @Model.IdSolicitud</h1>
+
+<p>
+    <a class="btn btn-dark" asp-page="/Solicitudes/ListarSolicitudes">Volver a Solicitudes</a>
+    <a class="btn btn-dark" asp-page="CrearDesgloses" asp-route-idSolicitud="@Model.IdSolicitud">Nuevo Desglose</a>
+</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Mes</th>
+                <th>Año</th>
+                <th>Horas</th>
+				<th>Monto</th>
+				<th>IVA (13% del monto)</th>
+                <th>Total</th>
+                <th>Observaciones</th>
+                <th>Porcentaje de Cobro</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Desgloses.Any())
+            {
+                <tr>
+                    <td colspan="9" class="text-center">No hay desgloses para esta solicitud.</td>
+                </tr>
+            }
+            else
+            {
+                int indexBase = (Model.PaginaActual - 1) * Model.TamanoPagina;
+                for (int i = 0; i < Model.Desgloses.Count; i++)
+                {
+                    var desglose = Model.Desgloses[i];
+                    <tr>
+                        <td>@desglose.mes</td>
+                        <td>@desglose.anio</td>
+                        <td>@desglose.horas</td>
+                        <td>@desglose.monto.ToString("C")</td>
+                        <td>@desglose.monto.ToString("C")</td>
+                        <td>@desglose.total.ToString("C")</td>
+                        <td>@desglose.observaciones</td>
+                        <td>@desglose.porcentaje_cobro.ToString("N2") %</td>
+                        <td style="white-space: nowrap;">
+                            <a class="btn btn-sm btn-outline-secondary" asp-page="EditarDesgloses" asp-route-id="@desglose.id_desglose" asp-route-idSolicitud="@Model.IdSolicitud">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button type="button"
+                                    class="btn btn-sm btn-dark"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEliminar"
+                                    data-id="@desglose.id_desglose"
+                                    data-nombre="@desglose.observaciones ?? "Desglose"">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<nav aria-label="Paginación de desgloses" class="mt-4">
+    <ul class="pagination pagination-dark justify-content-center">
+        @if (Model.PaginaActual > 1)
+        {
+            <li class="page-item">
+                <a class="page-link text-white bg-dark" asp-route-id="@Model.IdSolicitud" asp-route-pagina="@(Model.PaginaActual - 1)">Anterior</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.TotalPaginas; i++)
+        {
+            <li class="page-item @(i == Model.PaginaActual ? "active" : "")">
+                <a class="page-link text-white bg-dark" asp-route-id="@Model.IdSolicitud" asp-route-pagina="@i">@i</a>
+            </li>
+        }
+
+        @if (Model.PaginaActual < Model.TotalPaginas)
+        {
+            <li class="page-item">
+                <a class="page-link text-white bg-dark" asp-route-id="@Model.IdSolicitud" asp-route-pagina="@(Model.PaginaActual + 1)">Siguiente</a>
+            </li>
+        }
+    </ul>
+</nav>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-dark" role="alert">
+        @TempData["Mensaje"]
+    </div>
+}
+
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Eliminar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Realmente desea eliminar el desglose: <strong id="nombreDesglose"></strong>?
+                </div>
+                <input type="hidden" name="id_desglose" id="desgloseIdEliminar" />
+                <input type="hidden" name="id_solicitud" value="@Model.IdSolicitud" />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-dark">Sí, eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const modalEliminar = document.getElementById('modalEliminar');
+        modalEliminar.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const idDesglose = button.getAttribute('data-id');
+            const nombreDesglose = button.getAttribute('data-nombre');
+
+            document.getElementById('desgloseIdEliminar').value = idDesglose;
+            document.getElementById('nombreDesglose').textContent = nombreDesglose;
+        });
+    </script>
+}

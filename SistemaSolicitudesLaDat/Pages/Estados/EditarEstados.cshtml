@@ -1,0 +1,38 @@
+﻿@page "{id}"
+@model SistemaSolicitudesLaDat.Pages.Estados.EditarModel
+@{
+    ViewData["Title"] = "Editar Estado de Solicitud";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Editar Estado de Solicitud</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">@TempData["Mensaje"]</div>
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="background-color: #d9d9d9;">
+        <div class="card-body">
+            <form method="post">
+                <input type="hidden" asp-for="Estado.id_estado" />
+
+                <div class="mb-3">
+                    <label asp-for="Estado.id_estado" class="form-label">Nombre del Estado</label>
+                    <input asp-for="Estado.Estado" class="form-control" />
+                    <span asp-validation-for="Estado.Estado" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-dark">Actualizar</button>
+                    <a asp-page="/Estados/Index" class="btn btn-outline-secondary ms-2">Regresar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

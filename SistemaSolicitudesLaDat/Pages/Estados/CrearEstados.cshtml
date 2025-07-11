@@ -1,0 +1,43 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Estados.CrearEstadosModel
+@{
+    ViewData["Title"] = "Crear Estado de Solicitud";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Crear Estado de Solicitud</h1>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">@TempData["Mensaje"]</div>
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="background-color: #d9d9d9;">
+        <div class="card-body">
+            <form method="post">
+
+                <div class="mb-3">
+                    <label asp-for="EstadoSolicitud.id_estado" class="form-label">ID Estado</label>
+                    <input asp-for="EstadoSolicitud.id_estado" class="form-control" />
+                    <span asp-validation-for="EstadoSolicitud.id_estado" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="EstadoSolicitud.Estado" class="form-label">Nombre Estado</label>
+                    <input asp-for="EstadoSolicitud.Estado" class="form-control" />
+                    <span asp-validation-for="EstadoSolicitud.Estado" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-dark">Guardar</button>
+                    <a asp-page="/Estados/Index" class="btn btn-outline-secondary ms-2">Regresar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

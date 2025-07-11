@@ -1,0 +1,16 @@
+﻿/* solicitudes-colores.css */
+
+.table-danger {
+    background-color: #f8d7da !important; /* rojo claro */
+    color: #842029 !important; /* texto oscuro */
+}
+
+.table-warning {
+    background-color: #fff3cd !important; /* amarillo claro */
+    color: #664d03 !important; /* texto oscuro */
+}
+
+.table-success {
+    background-color: #d1e7dd !important; /* verde claro */
+    color: #0f5132 !important; /* texto oscuro */
+}

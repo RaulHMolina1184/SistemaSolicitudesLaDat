@@ -1,0 +1,98 @@
+﻿@page
+@model SistemaSolicitudesLaDat.Pages.Estados.IndexModel
+@{
+    ViewData["Title"] = "Administración de Estados de Solicitud";
+    Layout = "_PrincipalLayout";
+}
+
+<h1 class="mt-4">Administración de Estados de Solicitud</h1>
+
+<p>
+    <a class="btn btn-dark" asp-page="CrearEstados">Nuevo Estado</a>
+</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Identificador</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Estados.Any())
+            {
+                <tr>
+                    <td colspan="4" class="text-center">No hay datos para mostrar</td>
+                </tr>
+            }
+            else
+            {
+                for (int i = 0; i < Model.Estados.Count; i++)
+                {
+                    var estado = Model.Estados[i];
+
+                    <tr>
+                        <td>@estado.id_estado</td>
+                        <td>@estado.Estado</td>
+                        <td style="white-space: nowrap;">
+                            <a class="btn btn-sm btn-outline-secondary" asp-page="EditarEstados" asp-route-id="@estado.id_estado"><i class="fas fa-edit"></i></a>
+                            <button type="button"
+                                    class="btn btn-sm btn-dark"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEliminar"
+                                    data-id="@estado.id_estado"
+                                    data-nombre="@estado.Estado">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-dark" role="alert">
+        @TempData["Mensaje"]
+    </div>
+}
+
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Eliminar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEliminarLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Realmente desea eliminar el estado: <strong id="nombreEstado"></strong>?
+                </div>
+                <input type="hidden" name="id_estado" id="estadoIdEliminar" />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-dark">Sí, eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const modalEliminar = document.getElementById('modalEliminar');
+        modalEliminar.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const idEstado = button.getAttribute('data-id');
+            const nombreEstado = button.getAttribute('data-nombre');
+
+            document.getElementById('estadoIdEliminar').value = idEstado;
+            document.getElementById('nombreEstado').textContent = nombreEstado;
+        });
+    </script>
+}
