@@ -78,14 +78,20 @@ namespace SistemaSolicitudesLaDat.Repository.Login
 
                 var parameters = new DynamicParameters();
                 parameters.Add("@pI_nombreUsuario", nombreUsuario, DbType.String, ParameterDirection.Input);
+                parameters.Add("@pS_resultado", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                 connection.Execute("registrar_intento_fallido", parameters, commandType: CommandType.StoredProcedure);
+
+                int resultado = parameters.Get<int>("@pS_resultado");
+
+                Console.WriteLine($"Resultado bitácora: {resultado}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en RegistrarIntentoFallido: {ex.Message}");
             }
         }
+
 
         public void ReiniciarIntentos(string nombreUsuario)
         {
